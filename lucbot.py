@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 import os
 from dotenv import load_dotenv
 from keep_alive import keep_alive
@@ -16,12 +17,16 @@ intents.message_content = True
 intents.messages = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
-
+tree = app_commands.CommandTree(bot)  # 👈 สำหรับ Slash Command
 
 @bot.event
 async def on_ready():
+    await tree.sync()
     print(f"บอทพร้อมใช้งานในชื่อ {bot.user}")
 
+@bot.tree.command(name="status", description="ตรวจสอบสถานะของบอท")
+async def status(interaction: discord.Interaction):
+    await interaction.response.send_message("✅ บอทยังทำงานอยู่เจ้าค่ะ!")
 
 @bot.event
 async def on_message(message):
@@ -35,6 +40,5 @@ async def on_message(message):
         )
 
     await bot.process_commands(message)
-
 
 bot.run(TOKEN)
