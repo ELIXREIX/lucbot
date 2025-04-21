@@ -24,7 +24,7 @@ intents.messages = True
 class LucBot(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix="!", intents=intents)
-        self.tree = app_commands.CommandTree(self)
+
 
     async def setup_hook(self):
         # 👇 Sync Command ให้กับ Server ที่กำหนดไว้ (แสดงผลทันที)
