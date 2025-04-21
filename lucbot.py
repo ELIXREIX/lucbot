@@ -2,7 +2,9 @@ import discord
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
+from keep_alive import keep_alive
 
+keep_alive()
 load_dotenv()
 
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -15,9 +17,11 @@ intents.messages = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+
 @bot.event
 async def on_ready():
     print(f"บอทพร้อมใช้งานในชื่อ {bot.user}")
+
 
 @bot.event
 async def on_message(message):
@@ -26,8 +30,11 @@ async def on_message(message):
 
     if message.channel.id == ANNOUNCE_CHANNEL_ID:
         user = await bot.fetch_user(OWNER_ID)
-        await user.send(f"📢 แจ้งเตือนจากประกาศ:\n\n{message.content or '[ไม่มีข้อความ text แต่มี embed หรือลิงก์]'}")
+        await user.send(
+            f"📢 แจ้งเตือนจากประกาศ:\n\n{message.content or '[ไม่มีข้อความ text แต่มี embed หรือลิงก์]'}"
+        )
 
     await bot.process_commands(message)
+
 
 bot.run(TOKEN)
