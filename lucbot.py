@@ -16,17 +16,24 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.messages = True
 
-bot = commands.Bot(command_prefix="!", intents=intents)
-tree = app_commands.CommandTree(bot)  # 👈 สำหรับ Slash Command
+class LucBot(commands.Bot):
+    def __init__(self):
+        super().__init__(command_prefix="!", intents=intents)
+        self.tree = app_commands.CommandTree(self)
 
-@bot.event
-async def on_ready():
-    await tree.sync()
-    print(f"บอทพร้อมใช้งานในชื่อ {bot.user}")
+    async def setup_hook(self):
+        await self.tree.sync()
+        print("✅ Slash Commands synced เรียบร้อยแล้วเจ้าค่ะ!")
+
+bot = LucBot()
 
 @bot.tree.command(name="status", description="ตรวจสอบสถานะของบอท")
 async def status(interaction: discord.Interaction):
     await interaction.response.send_message("✅ บอทยังทำงานอยู่เจ้าค่ะ!")
+
+@bot.event
+async def on_ready():
+    print(f"บอทพร้อมใช้งานในชื่อ {bot.user}")
 
 @bot.event
 async def on_message(message):
