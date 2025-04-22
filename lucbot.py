@@ -58,8 +58,13 @@ async def purge(interaction: discord.Interaction, amount: int):
         await interaction.response.send_message("⚠️ ใส่จำนวนระหว่าง 1 ถึง 100 เจ้าค่ะ", ephemeral=True)
         return
 
+    # ✅ ตอบล่วงหน้า เพื่อกัน interaction timeout
+    await interaction.response.defer(ephemeral=True)
+
     deleted = await interaction.channel.purge(limit=amount)
-    await interaction.response.send_message(f"🧹 ลบข้อความจำนวน {len(deleted)} ข้อความเรียบร้อยแล้วเจ้าค่ะ!", ephemeral=True)
+
+    # ✅ ตอบผลลัพธ์ผ่าน followup แทน
+    await interaction.followup.send(f"🧹 ลบข้อความจำนวน {len(deleted)} ข้อความเรียบร้อยแล้วเจ้าค่ะ!")
 
 # /summon_maid
 @bot.tree.command(name="summon_maid", description="เรียกเมดประจำตัวมารายงานตัวเจ้าค่ะ!")
